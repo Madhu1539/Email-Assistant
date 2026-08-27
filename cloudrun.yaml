@@ -1,0 +1,107 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Cloud Run Service Configuration (YAML)
+#
+# Deploy with:
+#   gcloud run services replace cloudrun.yaml --region=us-central1
+#
+# Or via the MCP Cloud Run tool.
+# ─────────────────────────────────────────────────────────────────────────────
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: email-assistant-server
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    metadata:
+      annotations:
+        # Scale to zero when idle (cost-saving for MVP)
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "3"
+        # Startup CPU boost
+        run.googleapis.com/startup-cpu-boost: "true"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 60
+      containers:
+        - image: gcr.io/YOUR_PROJECT_ID/email-assistant-server:latest
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          # ── Environment Variables ────────────────────────────────────────
+          # Non-secret values set here. Secrets reference Secret Manager.
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "5000"
+            - name: CLIENT_URL
+              value: "https://your-client-domain.com"  # ← Update this
+            - name: GOOGLE_REDIRECT_URI
+              value: "https://your-server-domain.run.app/api/gmail/oauth/callback"  # ← Update
+            - name: GOOGLE_OAUTH_SCOPES
+              value: "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.modify"
+
+          # ── Secrets (from Secret Manager) ────────────────────────────────
+          # Create each secret first:
+          #   gcloud secrets create MONGODB_URI --data-file=-
+          #   gcloud secrets create JWT_SECRET --data-file=-
+          #   etc.
+          envFrom: []
+          # Use individual secret refs:
+          # - name: MONGODB_URI
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: MONGODB_URI
+          #       key: latest
+          # - name: JWT_SECRET
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: JWT_SECRET
+          #       key: latest
+          # - name: TOKEN_ENCRYPTION_KEY
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: TOKEN_ENCRYPTION_KEY
+          #       key: latest
+          # - name: GOOGLE_CLIENT_ID
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: GOOGLE_CLIENT_ID
+          #       key: latest
+          # - name: GOOGLE_CLIENT_SECRET
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: GOOGLE_CLIENT_SECRET
+          #       key: latest
+          # - name: OPENROUTER_API_KEY
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: OPENROUTER_API_KEY
+          #       key: latest
+          # - name: GEMINI_API_KEY
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: GEMINI_API_KEY
+          #       key: latest
+
+          # ── Liveness / Readiness Probes ──────────────────────────────────
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 10

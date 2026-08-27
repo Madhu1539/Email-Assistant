@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+client/node_modules/
+
+# Environment files — NEVER commit real secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Next.js build output
+client/.next/
+client/out/
+client/.next/standalone/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

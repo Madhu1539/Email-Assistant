@@ -1,0 +1,70 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# docker-compose.yml — Local development only
+#
+# Usage:
+#   docker compose up          → start all services
+#   docker compose up --build  → rebuild server image
+#   docker compose down -v     → stop and remove volumes
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── MongoDB ────────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7-jammy
+    container_name: email_assistant_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: email-assistant
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── API Server ─────────────────────────────────────────────────────────────
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: email_assistant_server
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    # Load secrets from .env — NEVER commit a populated .env file
+    env_file:
+      - .env
+    environment:
+      # Override DB URI to use the compose service name
+      MONGODB_URI: mongodb://mongo:27017/email-assistant
+      NODE_ENV: development
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Next.js Client ─────────────────────────────────────────────────────────
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: email_assistant_client
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:5000/api
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    depends_on:
+      - server
+
+volumes:
+  mongo_data:
