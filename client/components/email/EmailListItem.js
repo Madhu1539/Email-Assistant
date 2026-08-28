@@ -34,12 +34,15 @@ export default function EmailListItem({ email, isSelected = false, onClick, onSt
       aria-label={`Email from ${displayName}: ${email.subject}`}
       className={`
         flex items-start gap-3 px-4 py-3.5 cursor-pointer
-        border-b border-[#2a2a38] transition-colors duration-100
+        border-b transition-colors duration-100
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500
         ${isSelected
-          ? 'bg-indigo-600/10 border-l-2 border-l-indigo-500'
-          : 'hover:bg-[#1e1e2a] border-l-2 border-l-transparent'}
+          ? 'bg-indigo-500/10 border-l-2 border-l-indigo-500'
+          : 'hover:bg-[var(--color-surface-hover)] border-l-2 border-l-transparent'}
       `}
+      style={{
+        borderColor: 'var(--color-surface-border)',
+      }}
     >
       {/* Unread dot */}
       <div className="flex flex-col items-center gap-1 pt-1 shrink-0 w-3">
@@ -62,20 +65,39 @@ export default function EmailListItem({ email, isSelected = false, onClick, onSt
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline justify-between gap-2 mb-0.5">
-          <span className={`text-sm truncate ${isUnread ? 'font-semibold text-[#f0f0f8]' : 'font-medium text-[#9898b0]'}`}>
+          <span
+            className="text-sm truncate"
+            style={{
+              fontWeight: isUnread ? 600 : 500,
+              color: isUnread ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+            }}
+          >
             {displayName || email.from}
           </span>
           <time
             dateTime={email.date}
-            className={`text-xs shrink-0 ${isUnread ? 'text-indigo-400 font-medium' : 'text-[#60607a]'}`}
+            className="text-xs shrink-0"
+            style={{
+              color: isUnread ? 'var(--color-primary)' : 'var(--color-text-muted)',
+              fontWeight: isUnread ? 600 : 400,
+            }}
           >
             {formatEmailDate(email.date)}
           </time>
         </div>
-        <p className={`text-sm truncate mb-0.5 ${isUnread ? 'font-semibold text-[#f0f0f8]' : 'text-[#9898b0]'}`}>
+        <p
+          className="text-sm truncate mb-0.5"
+          style={{
+            fontWeight: isUnread ? 600 : 400,
+            color: isUnread ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+          }}
+        >
           {email.subject}
         </p>
-        <p className="text-xs text-[#60607a] truncate">
+        <p
+          className="text-xs truncate"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
           {email.snippet}
         </p>
       </div>
@@ -85,10 +107,10 @@ export default function EmailListItem({ email, isSelected = false, onClick, onSt
         onClick={handleStar}
         aria-label={email.isStarred ? 'Unstar email' : 'Star email'}
         aria-pressed={email.isStarred}
-        className="p-1 rounded shrink-0 mt-0.5 transition-colors hover:bg-[#2a2a38]"
+        className="p-1 rounded shrink-0 mt-0.5 transition-colors hover:bg-[var(--color-surface-hover)]"
       >
         <Star
-          className={`w-4 h-4 transition-colors ${email.isStarred ? 'text-amber-400 fill-amber-400' : 'text-[#60607a] hover:text-amber-400'}`}
+          className={`w-4 h-4 transition-colors ${email.isStarred ? 'text-amber-400 fill-amber-400' : 'text-[var(--color-text-muted)] hover:text-amber-400'}`}
           aria-hidden="true"
         />
       </button>
