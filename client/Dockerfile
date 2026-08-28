@@ -13,6 +13,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV BUILD_STANDALONE=true
 # Build-time public env vars (non-secret)
 ARG NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
 ARG NEXT_PUBLIC_APP_URL=http://localhost:3000

@@ -4,8 +4,15 @@
 
 import axios from 'axios';
 
+// Normalize API base URL (handles with or without /api and trailing slashes)
+export function getApiBaseUrl() {
+  const raw = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
+  const trimmed = raw.replace(/\/+$/, '');
+  return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+}
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: getApiBaseUrl(),
   withCredentials: true, // Required for HttpOnly cookie-based auth
   headers: {
     'Content-Type': 'application/json',

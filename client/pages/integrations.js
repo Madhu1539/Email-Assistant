@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button';
 import { Plug, Wifi, WifiOff, AlertTriangle } from 'lucide-react';
 import useGmailStore from '@/store/gmailStore';
 import useUiStore from '@/store/uiStore';
-import api from '@/services/api';
+import api, { getApiBaseUrl } from '@/services/api';
 
 export default function IntegrationsPage() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function IntegrationsPage() {
 
   function handleConnectGmail() {
     // Navigate directly — the backend handles the OAuth redirect
-    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/gmail/oauth/start`;
+    window.location.href = `${getApiBaseUrl()}/gmail/oauth/start`;
   }
 
   async function handleDisconnect() {

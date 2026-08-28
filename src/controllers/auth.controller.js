@@ -3,10 +3,12 @@
 const { NODE_ENV } = require('../config/env');
 const authService = require('../services/authService');
 
+const isProduction = NODE_ENV === 'production';
+
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: NODE_ENV === 'production',
-  sameSite: 'lax',
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
   maxAge: 24 * 60 * 60 * 1000, // 24 hours in ms
   path: '/',
 };
@@ -54,7 +56,12 @@ async function login(req, res, next) {
  */
 async function logout(req, res, next) {
   try {
-    res.clearCookie('token', { path: '/' });
+    res.clearCookie('token', {
+      path: '/',
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+    });
 
     return res.status(200).json({
       success: true,

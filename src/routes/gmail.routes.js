@@ -11,8 +11,8 @@ const router = Router();
 router.get('/oauth/start', authenticate, oauthLimiter, gmailController.startOAuth);
 
 // GET /api/gmail/oauth/callback — Google redirects here after consent
-// Note: We still require the JWT cookie here (SameSite=Lax allows it for redirects)
-router.get('/oauth/callback', authenticate, oauthLimiter, gmailController.handleCallback);
+// User identity is securely validated via the cryptographically signed OAuth state token
+router.get('/oauth/callback', oauthLimiter, gmailController.handleCallback);
 
 // GET /api/gmail/status — Get Gmail connection status
 router.get('/status', authenticate, gmailController.getStatus);

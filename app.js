@@ -24,10 +24,23 @@ const app = express();
 // ─── Security Headers ─────────────────────────────────────────────────────────
 app.use(helmet());
 
-// ─── CORS ─────────────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  CLIENT_URL?.replace(/\/+$/, ''),
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g., mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      const normalizedOrigin = origin.replace(/\/+$/, '');
+      if (allowedOrigins.includes(normalizedOrigin) || allowedOrigins.includes('*')) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS origin not allowed: ${origin}`));
+    },
     credentials: true, // Required for HttpOnly cookies
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -54,6 +67,16 @@ if (NODE_ENV !== 'test') {
 
 // ─── General Rate Limiting ────────────────────────────────────────────────────
 app.use('/api', generalLimiter);
+
+// ─── Root & Health Check ──────────────────────────────────────────────────────
+app.get('/', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Intelligent Email Assistant API is running.',
+    health: '/api/health',
+    version: '1.0.0',
+  });
+});
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/health', healthRoutes);

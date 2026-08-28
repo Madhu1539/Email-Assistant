@@ -11,12 +11,15 @@ const STATE_TTL_MS = 10 * 60 * 1000; // 10 minutes (BR-006)
 const STATE_BYTES  = 32;              // 32 bytes = 256-bit entropy (BR-005)
 
 // Periodic cleanup of expired states (every 5 minutes)
-setInterval(() => {
+const cleanupInterval = setInterval(() => {
   const now = Date.now();
   for (const [key, val] of stateStore.entries()) {
     if (val.expiresAt < now) stateStore.delete(key);
   }
 }, 5 * 60 * 1000);
+if (cleanupInterval.unref) {
+  cleanupInterval.unref();
+}
 
 /**
  * Generates a cryptographically secure state string and stores it server-side.
