@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import {
   Sparkles, Wand2, Copy, Check, RefreshCw, ChevronDown, ChevronUp,
   Send, Tag, Zap, ListChecks, AlertCircle, Clock, CheckCircle2,
@@ -148,34 +148,34 @@ export default function AIPanel({ messageId, emailSubject }) {
 
   // Category styling
   const CATEGORY_STYLES = {
-    Work:       'bg-blue-500/15 text-blue-400 border-blue-500/25',
-    Finance:    'bg-emerald-500/15 text-emerald-400 border-emerald-500/25',
-    Travel:     'bg-sky-500/15 text-sky-400 border-sky-500/25',
-    Promotions: 'bg-orange-500/15 text-orange-400 border-orange-500/25',
-    Social:     'bg-pink-500/15 text-pink-400 border-pink-500/25',
-    Updates:    'bg-purple-500/15 text-purple-400 border-purple-500/25',
-    Personal:   'bg-yellow-500/15 text-yellow-400 border-yellow-500/25',
-    Other:      'bg-[#2a2a38] text-[#9898b0] border-[#3a3a50]',
+    Work:       'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+    Finance:    'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+    Travel:     'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20',
+    Promotions: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20',
+    Social:     'bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/20',
+    Updates:    'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
+    Personal:   'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20',
+    Other:      'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20',
   };
 
   // Priority styling
   const PRIORITY_STYLES = {
-    High:   { badge: 'bg-red-500/15 text-red-400 border-red-500/25', icon: <AlertCircle className="w-3.5 h-3.5" /> },
-    Normal: { badge: 'bg-amber-500/15 text-amber-400 border-amber-500/25', icon: <Clock className="w-3.5 h-3.5" /> },
-    Low:    { badge: 'bg-[#2a2a38] text-[#9898b0] border-[#3a3a50]', icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+    High:   { badge: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20', icon: <AlertCircle className="w-3.5 h-3.5" /> },
+    Normal: { badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20', icon: <Clock className="w-3.5 h-3.5" /> },
+    Low:    { badge: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20', icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
   };
 
   const URGENCY_DOT = {
-    high:   'bg-red-400',
-    normal: 'bg-amber-400',
-    low:    'bg-[#60607a]',
+    high:   'bg-red-500',
+    normal: 'bg-amber-500',
+    low:    'bg-slate-400',
   };
 
   return (
     <div className="space-y-3">
       {/* Section header */}
-      <div className="flex items-center gap-2 text-xs font-medium text-[#9898b0] uppercase tracking-wider">
-        <Sparkles className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
+      <div className="flex items-center gap-2 text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider">
+        <Sparkles className="w-3.5 h-3.5 text-indigo-500" aria-hidden="true" />
         AI Assistant
       </div>
 
@@ -183,11 +183,14 @@ export default function AIPanel({ messageId, emailSubject }) {
       <div className="grid grid-cols-2 gap-3">
 
         {/* Classify */}
-        <div className="rounded-xl bg-[#1e1e2a] border border-indigo-500/15 px-4 py-3 space-y-2">
+        <div
+          className="rounded-xl border px-4 py-3 space-y-2"
+          style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-surface-border)' }}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Tag className="w-4 h-4 text-indigo-400 shrink-0" aria-hidden="true" />
-              <span className="text-sm font-medium text-[#f0f0f8]">Category</span>
+              <Tag className="w-4 h-4 text-indigo-500 shrink-0" aria-hidden="true" />
+              <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Category</span>
             </div>
             <Button
               variant="outline" size="sm"
@@ -202,28 +205,35 @@ export default function AIPanel({ messageId, emailSubject }) {
           </div>
           {isClassifying && (
             <div className="flex items-center gap-2 py-1">
-              <Spinner size="sm" /><span className="text-xs text-[#9898b0]">Classifying…</span>
+              <Spinner size="sm" /><span className="text-xs text-[var(--color-text-secondary)]">Classifying…</span>
             </div>
           )}
           {classification && !isClassifying && (
-            <div className="space-y-1">
-              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${CATEGORY_STYLES[classification.category] || CATEGORY_STYLES.Other}`}>
+            <div className="space-y-1.5 pt-1">
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${CATEGORY_STYLES[classification.category] || CATEGORY_STYLES.Other}`}>
                 {classification.category}
               </span>
               {classification.reason && (
-                <p className="text-xs text-[#60607a] leading-relaxed">{classification.reason}</p>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                  {classification.reason}
+                </p>
               )}
-              <span className="text-xs text-[#60607a]">via {providerLabel(classification.provider)}</span>
+              <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+                via {providerLabel(classification.provider)}
+              </div>
             </div>
           )}
         </div>
 
         {/* Prioritize */}
-        <div className="rounded-xl bg-[#1e1e2a] border border-indigo-500/15 px-4 py-3 space-y-2">
+        <div
+          className="rounded-xl border px-4 py-3 space-y-2"
+          style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-surface-border)' }}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
-              <span className="text-sm font-medium text-[#f0f0f8]">Priority</span>
+              <Zap className="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true" />
+              <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Priority</span>
             </div>
             <Button
               variant="outline" size="sm"
@@ -238,30 +248,37 @@ export default function AIPanel({ messageId, emailSubject }) {
           </div>
           {isPrioritizing && (
             <div className="flex items-center gap-2 py-1">
-              <Spinner size="sm" /><span className="text-xs text-[#9898b0]">Analyzing…</span>
+              <Spinner size="sm" /><span className="text-xs text-[var(--color-text-secondary)]">Analyzing…</span>
             </div>
           )}
           {priority && !isPrioritizing && (
-            <div className="space-y-1">
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${PRIORITY_STYLES[priority.priority]?.badge || PRIORITY_STYLES.Normal.badge}`}>
+            <div className="space-y-1.5 pt-1">
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${PRIORITY_STYLES[priority.priority]?.badge || PRIORITY_STYLES.Normal.badge}`}>
                 {PRIORITY_STYLES[priority.priority]?.icon}
                 {priority.priority}
               </span>
               {priority.reason && (
-                <p className="text-xs text-[#60607a] leading-relaxed">{priority.reason}</p>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                  {priority.reason}
+                </p>
               )}
-              <span className="text-xs text-[#60607a]">via {providerLabel(priority.provider)}</span>
+              <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+                via {providerLabel(priority.provider)}
+              </div>
             </div>
           )}
         </div>
       </div>
 
       {/* Row 2: Summarize */}
-      <div className="rounded-xl bg-[#1e1e2a] border border-indigo-500/15">
+      <div
+        className="rounded-xl border"
+        style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-surface-border)' }}
+      >
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" aria-hidden="true" />
-            <span className="text-sm font-medium text-[#f0f0f8]">Summarize</span>
+            <Sparkles className="w-4 h-4 text-indigo-500 shrink-0" aria-hidden="true" />
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Summarize</span>
           </div>
           <div className="flex items-center gap-1.5">
             {summary && (
@@ -269,7 +286,8 @@ export default function AIPanel({ messageId, emailSubject }) {
                 onClick={() => setSummaryOpen((v) => !v)}
                 aria-expanded={summaryOpen}
                 aria-label={summaryOpen ? 'Collapse summary' : 'Expand summary'}
-                className="p-1.5 rounded-md text-[#60607a] hover:text-[#f0f0f8] hover:bg-[#2a2a38] transition-colors"
+                className="p-1.5 rounded-md transition-colors hover:bg-[var(--color-surface-hover)]"
+                style={{ color: 'var(--color-text-secondary)' }}
               >
                 {summaryOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
@@ -282,20 +300,31 @@ export default function AIPanel({ messageId, emailSubject }) {
           </div>
         </div>
         {summaryOpen && (isSummarizing || summary) && (
-          <div className="px-4 pb-4 border-t border-[#2a2a38] pt-3 space-y-3">
+          <div
+            className="px-4 pb-4 border-t pt-3 space-y-3"
+            style={{ borderColor: 'var(--color-surface-border)' }}
+          >
             {isSummarizing ? (
               <div className="flex items-center gap-2 py-2">
-                <Spinner size="sm" /><span className="text-xs text-[#9898b0]">Generating summary…</span>
+                <Spinner size="sm" /><span className="text-xs text-[var(--color-text-secondary)]">Generating summary…</span>
               </div>
             ) : (
               <>
-                <p className="text-sm text-[#d0d0e0] leading-relaxed">{summary}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#60607a]">via {providerLabel(summaryProvider)}</span>
-                  <button onClick={() => copyToClipboard(summary, 'summary')} aria-label="Copy summary"
-                    className="flex items-center gap-1.5 text-xs text-[#9898b0] hover:text-[#f0f0f8] transition-colors">
+                <p className="text-sm leading-relaxed font-normal" style={{ color: 'var(--color-text-primary)' }}>
+                  {summary}
+                </p>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    via {providerLabel(summaryProvider)}
+                  </span>
+                  <button
+                    onClick={() => copyToClipboard(summary, 'summary')}
+                    aria-label="Copy summary"
+                    className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:opacity-80"
+                    style={{ color: 'var(--color-text-secondary)' }}
+                  >
                     {summaryCopied
-                      ? <><Check className="w-3.5 h-3.5 text-green-400" /><span className="text-green-400">Copied!</span></>
+                      ? <><Check className="w-3.5 h-3.5 text-green-500" /><span className="text-green-500">Copied!</span></>
                       : <><Copy className="w-3.5 h-3.5" /><span>Copy</span></>}
                   </button>
                 </div>
@@ -306,11 +335,14 @@ export default function AIPanel({ messageId, emailSubject }) {
       </div>
 
       {/* Row 3: Action Items */}
-      <div className="rounded-xl bg-[#1e1e2a] border border-green-500/15">
+      <div
+        className="rounded-xl border"
+        style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-surface-border)' }}
+      >
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <ListChecks className="w-4 h-4 text-green-400 shrink-0" aria-hidden="true" />
-            <span className="text-sm font-medium text-[#f0f0f8]">Action Items</span>
+            <ListChecks className="w-4 h-4 text-green-500 shrink-0" aria-hidden="true" />
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Action Items</span>
           </div>
           <div className="flex items-center gap-1.5">
             {actionItems && (
@@ -318,7 +350,8 @@ export default function AIPanel({ messageId, emailSubject }) {
                 onClick={() => setActionsOpen((v) => !v)}
                 aria-expanded={actionsOpen}
                 aria-label={actionsOpen ? 'Collapse actions' : 'Expand actions'}
-                className="p-1.5 rounded-md text-[#60607a] hover:text-[#f0f0f8] hover:bg-[#2a2a38] transition-colors"
+                className="p-1.5 rounded-md transition-colors hover:bg-[var(--color-surface-hover)]"
+                style={{ color: 'var(--color-text-secondary)' }}
               >
                 {actionsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
@@ -332,39 +365,52 @@ export default function AIPanel({ messageId, emailSubject }) {
         </div>
 
         {actionsOpen && (isExtracting || actionItems) && (
-          <div className="px-4 pb-4 border-t border-[#2a2a38] pt-3 space-y-3">
+          <div
+            className="px-4 pb-4 border-t pt-3 space-y-3"
+            style={{ borderColor: 'var(--color-surface-border)' }}
+          >
             {isExtracting ? (
               <div className="flex items-center gap-2 py-2">
-                <Spinner size="sm" /><span className="text-xs text-[#9898b0]">Extracting action items…</span>
+                <Spinner size="sm" /><span className="text-xs text-[var(--color-text-secondary)]">Extracting action items…</span>
               </div>
             ) : actionItems?.actions?.length === 0 ? (
-              <p className="text-sm text-[#60607a] italic">No action items found in this email.</p>
+              <p className="text-sm italic" style={{ color: 'var(--color-text-muted)' }}>
+                No action items found in this email.
+              </p>
             ) : (
               <>
                 <ul className="space-y-2.5">
                   {actionItems.actions.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2.5 p-3 rounded-lg bg-[#22222e] border border-[#2a2a38]">
+                    <li
+                      key={i}
+                      className="flex items-start gap-2.5 p-3 rounded-lg border"
+                      style={{ backgroundColor: 'var(--color-surface-hover)', borderColor: 'var(--color-surface-border)' }}
+                    >
                       <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${URGENCY_DOT[item.urgency] || URGENCY_DOT.normal}`} aria-hidden="true" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-[#f0f0f8] leading-relaxed">{item.task}</p>
+                        <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
+                          {item.task}
+                        </p>
                         {item.deadline && (
-                          <p className="text-xs text-amber-400 mt-1 flex items-center gap-1">
+                          <p className="text-xs text-amber-500 mt-1 flex items-center gap-1">
                             <Clock className="w-3 h-3" aria-hidden="true" />
                             {item.deadline}
                           </p>
                         )}
                       </div>
-                      <span className={`text-xs px-1.5 py-0.5 rounded capitalize shrink-0 ${
-                        item.urgency === 'high' ? 'text-red-400 bg-red-500/10' :
-                        item.urgency === 'normal' ? 'text-amber-400 bg-amber-500/10' :
-                        'text-[#60607a] bg-[#2a2a38]'
+                      <span className={`text-xs px-1.5 py-0.5 rounded capitalize shrink-0 font-medium ${
+                        item.urgency === 'high' ? 'text-red-600 bg-red-500/10' :
+                        item.urgency === 'normal' ? 'text-amber-600 bg-amber-500/10' :
+                        'text-slate-600 bg-slate-500/10'
                       }`}>
                         {item.urgency}
                       </span>
                     </li>
                   ))}
                 </ul>
-                <span className="text-xs text-[#60607a]">via {providerLabel(actionItems.provider)}</span>
+                <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                  via {providerLabel(actionItems.provider)}
+                </div>
               </>
             )}
           </div>
@@ -372,11 +418,14 @@ export default function AIPanel({ messageId, emailSubject }) {
       </div>
 
       {/* Row 4: Draft Reply */}
-      <div className="rounded-xl bg-[#1e1e2a] border border-violet-500/15">
+      <div
+        className="rounded-xl border"
+        style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-surface-border)' }}
+      >
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <Wand2 className="w-4 h-4 text-violet-400 shrink-0" aria-hidden="true" />
-            <span className="text-sm font-medium text-[#f0f0f8]">Draft Reply</span>
+            <Wand2 className="w-4 h-4 text-violet-500 shrink-0" aria-hidden="true" />
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Draft Reply</span>
           </div>
           <div className="flex items-center gap-1.5">
             {draft && (
@@ -384,7 +433,8 @@ export default function AIPanel({ messageId, emailSubject }) {
                 onClick={() => setDraftOpen((v) => !v)}
                 aria-expanded={draftOpen}
                 aria-label={draftOpen ? 'Collapse draft' : 'Expand draft'}
-                className="p-1.5 rounded-md text-[#60607a] hover:text-[#f0f0f8] hover:bg-[#2a2a38] transition-colors"
+                className="p-1.5 rounded-md transition-colors hover:bg-[var(--color-surface-hover)]"
+                style={{ color: 'var(--color-text-secondary)' }}
               >
                 {draftOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
@@ -405,36 +455,55 @@ export default function AIPanel({ messageId, emailSubject }) {
             onChange={(e) => setInstructions(e.target.value.slice(0, 500))}
             placeholder="Optional: e.g. 'keep it brief' or 'be formal'"
             aria-label="Reply instructions for AI"
-            className="w-full px-3 py-2 text-xs bg-[#22222e] border border-[#2a2a38] rounded-lg text-[#f0f0f8] placeholder-[#60607a] focus:outline-none focus:ring-1 focus:ring-violet-500 focus:border-transparent transition-all"
+            className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all"
+            style={{
+              backgroundColor: 'var(--color-surface-hover)',
+              borderColor: 'var(--color-surface-border)',
+              color: 'var(--color-text-primary)',
+            }}
           />
           {instructions.length > 450 && (
-            <p className="text-xs text-amber-400 mt-1">{500 - instructions.length} characters remaining</p>
+            <p className="text-xs text-amber-500 mt-1">{500 - instructions.length} characters remaining</p>
           )}
         </div>
 
         {draftOpen && (isGeneratingDraft || draft) && (
-          <div className="px-4 pb-4 border-t border-[#2a2a38] pt-3 space-y-3">
+          <div
+            className="px-4 pb-4 border-t pt-3 space-y-3"
+            style={{ borderColor: 'var(--color-surface-border)' }}
+          >
             {isGeneratingDraft ? (
               <div className="flex items-center gap-2 py-2">
-                <Spinner size="sm" /><span className="text-xs text-[#9898b0]">Generating reply draft…</span>
+                <Spinner size="sm" /><span className="text-xs text-[var(--color-text-secondary)]">Generating reply draft…</span>
               </div>
             ) : (
               <>
-                <pre className="text-sm text-[#d0d0e0] leading-relaxed whitespace-pre-wrap font-sans">{draft}</pre>
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <span className="text-xs text-[#60607a]">via {providerLabel(draftProvider)}</span>
+                <pre
+                  className="text-sm leading-relaxed whitespace-pre-wrap font-sans"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {draft}
+                </pre>
+                <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
+                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    via {providerLabel(draftProvider)}
+                  </span>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => copyToClipboard(draft, 'draft')} aria-label="Copy draft"
-                      className="flex items-center gap-1.5 text-xs text-[#9898b0] hover:text-[#f0f0f8] transition-colors">
+                    <button
+                      onClick={() => copyToClipboard(draft, 'draft')}
+                      aria-label="Copy draft"
+                      className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:opacity-80"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
                       {draftCopied
-                        ? <><Check className="w-3.5 h-3.5 text-green-400" /><span className="text-green-400">Copied!</span></>
+                        ? <><Check className="w-3.5 h-3.5 text-green-500" /><span className="text-green-500">Copied!</span></>
                         : <><Copy className="w-3.5 h-3.5" /><span>Copy</span></>}
                     </button>
                     <button
                       onClick={handleSendReply}
                       disabled={isSendingReply}
                       aria-label="Send this reply"
-                      className="flex items-center gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors px-2.5 py-1.5 rounded-md bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20"
+                      className="flex items-center gap-1.5 text-xs font-medium text-indigo-500 hover:text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors px-2.5 py-1.5 rounded-md bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20"
                     >
                       <Send className="w-3.5 h-3.5" aria-hidden="true" />
                       {isSendingReply ? 'Sending...' : 'Send Reply'}
@@ -447,7 +516,7 @@ export default function AIPanel({ messageId, emailSubject }) {
         )}
       </div>
 
-      <p className="text-xs text-[#60607a] px-1">
+      <p className="text-xs px-1" style={{ color: 'var(--color-text-muted)' }}>
         AI responses may be inaccurate. Always review before acting.
       </p>
     </div>

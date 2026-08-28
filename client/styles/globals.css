@@ -47,8 +47,8 @@
 
   /* Text colours */
   --color-text-primary: #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted: #94a3b8;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
 
   /* Status colours */
   --color-success: #16a34a;
@@ -74,8 +74,11 @@
 
   /* Text color overrides */
   .text-\[\#f0f0f8\] { color: var(--color-text-primary) !important; }
+  .text-\[\#d0d0e0\] { color: var(--color-text-primary) !important; }
+  .text-\[\#e0e0f0\] { color: var(--color-text-primary) !important; }
   .text-\[\#c0c0d8\] { color: var(--color-text-secondary) !important; }
   .text-\[\#9898b0\] { color: var(--color-text-secondary) !important; }
+  .text-\[\#a0a0b8\] { color: var(--color-text-secondary) !important; }
   .text-\[\#60607a\] { color: var(--color-text-muted) !important; }
   .placeholder-\[\#60607a\]::placeholder { color: var(--color-text-muted) !important; }
 
