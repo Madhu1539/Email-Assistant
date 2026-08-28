@@ -143,8 +143,18 @@ export default function LandingPage() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-[#2a2a38] py-6 text-center text-xs text-[#60607a]">
-          &copy; {new Date().getFullYear()} Intelligent Email Assistant. Built with Next.js &amp; AI.
+        <footer className="border-t border-[#2a2a38] py-6 px-6 text-xs text-[#60607a] flex flex-col sm:flex-row items-center justify-between gap-4 max-w-7xl mx-auto w-full">
+          <div>
+            &copy; {new Date().getFullYear()} Intelligent Email Assistant. All rights reserved.
+          </div>
+          <div className="flex items-center gap-6">
+            <Link href="/privacy" className="hover:text-[#f0f0f8] transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-[#f0f0f8] transition-colors">
+              Terms of Service
+            </Link>
+          </div>
         </footer>
       </div>
     </>
