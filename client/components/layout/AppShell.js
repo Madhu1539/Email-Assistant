@@ -8,6 +8,7 @@ import {
 import useAuthStore from '@/store/authStore';
 import useGmailStore from '@/store/gmailStore';
 import useUiStore from '@/store/uiStore';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import api from '@/services/api';
 
 const NAV_ITEMS = [
@@ -29,11 +30,14 @@ function NavItem({ href, label, icon: Icon, active, onClick }) {
         flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
         transition-all duration-150 group
         ${active
-          ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/20'
-          : 'text-[#9898b0] hover:bg-[#22222e] hover:text-[#f0f0f8] border border-transparent'}
+          ? 'bg-indigo-600/15 text-indigo-500 border border-indigo-500/30'
+          : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)] border border-transparent'}
       `}
     >
-      <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-indigo-400' : 'text-[#60607a] group-hover:text-[#9898b0]'}`} aria-hidden="true" />
+      <Icon
+        className={`w-4 h-4 shrink-0 ${active ? 'text-indigo-500' : 'text-[var(--color-text-muted)] group-hover:text-[var(--color-text-secondary)]'}`}
+        aria-hidden="true"
+      />
       {label}
     </Link>
   );
@@ -44,8 +48,8 @@ function GmailStatusBadge({ isConnected, gmailEmail }) {
     <div className={`
       flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium
       ${isConnected
-        ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-        : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}
+        ? 'bg-green-500/10 text-green-600 border border-green-500/20'
+        : 'bg-amber-500/10 text-amber-600 border border-amber-500/20'}
     `}>
       {isConnected
         ? <Wifi className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -81,18 +85,29 @@ export default function AppShell({ children }) {
 
   const sidebar = (
     <aside
-      className="flex flex-col h-full w-64 bg-[#1a1a24] border-r border-[#2a2a38]"
+      className="flex flex-col h-full w-64 border-r"
+      style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-surface-border)' }}
       aria-label="Main navigation"
     >
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[#2a2a38]">
-        <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shrink-0">
-          <Mail className="w-4 h-4 text-white" aria-hidden="true" />
+      {/* Logo + Theme Toggle */}
+      <div
+        className="flex items-center justify-between px-4 py-5 border-b"
+        style={{ borderColor: 'var(--color-surface-border)' }}
+      >
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shrink-0">
+            <Mail className="w-4 h-4 text-white" aria-hidden="true" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold leading-none" style={{ color: 'var(--color-text-primary)' }}>
+              Email Assistant
+            </p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+              AI-powered
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-semibold text-[#f0f0f8] leading-none">Email Assistant</p>
-          <p className="text-xs text-[#60607a] mt-0.5">AI-powered</p>
-        </div>
+        <ThemeToggle />
       </div>
 
       {/* Gmail status */}
@@ -113,14 +128,25 @@ export default function AppShell({ children }) {
       </nav>
 
       {/* User + Logout */}
-      <div className="px-3 pb-4 border-t border-[#2a2a38] pt-4 space-y-2">
-        <div className="px-3 py-2 rounded-lg bg-[#22222e]">
-          <p className="text-sm font-medium text-[#f0f0f8] truncate">{user?.name}</p>
-          <p className="text-xs text-[#60607a] truncate">{user?.email}</p>
+      <div
+        className="px-3 pb-4 border-t pt-4 space-y-2"
+        style={{ borderColor: 'var(--color-surface-border)' }}
+      >
+        <div
+          className="px-3 py-2 rounded-lg"
+          style={{ backgroundColor: 'var(--color-surface-hover)' }}
+        >
+          <p className="text-sm font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>
+            {user?.name}
+          </p>
+          <p className="text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>
+            {user?.email}
+          </p>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#9898b0] hover:bg-[#22222e] hover:text-red-400 transition-all duration-150 border border-transparent"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 border border-transparent hover:bg-red-500/10 hover:text-red-500"
+          style={{ color: 'var(--color-text-secondary)' }}
         >
           <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
           Sign out
@@ -130,7 +156,10 @@ export default function AppShell({ children }) {
   );
 
   return (
-    <div className="flex h-screen bg-[#0f0f14] overflow-hidden">
+    <div
+      className="flex h-screen overflow-hidden"
+      style={{ backgroundColor: 'var(--color-bg)' }}
+    >
       {/* Desktop sidebar */}
       <div className="hidden lg:flex shrink-0">
         {sidebar}
@@ -153,11 +182,15 @@ export default function AppShell({ children }) {
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile top bar */}
-        <div className="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-[#2a2a38] bg-[#1a1a24]">
+        <div
+          className="lg:hidden flex items-center gap-3 px-4 py-3 border-b"
+          style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-surface-border)' }}
+        >
           <button
             onClick={() => setSidebarOpen(true)}
             aria-label="Open navigation menu"
-            className="p-2 rounded-lg text-[#9898b0] hover:text-[#f0f0f8] hover:bg-[#22222e] transition-colors"
+            className="p-2 rounded-lg transition-colors hover:bg-[var(--color-surface-hover)]"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
             <Menu className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -165,7 +198,13 @@ export default function AppShell({ children }) {
             <div className="w-6 h-6 rounded-md bg-indigo-600 flex items-center justify-center">
               <Mail className="w-3.5 h-3.5 text-white" aria-hidden="true" />
             </div>
-            <span className="text-sm font-semibold text-[#f0f0f8]">Email Assistant</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+              Email Assistant
+            </span>
+          </div>
+          {/* Theme toggle for mobile top bar */}
+          <div className="ml-auto">
+            <ThemeToggle />
           </div>
         </div>
 

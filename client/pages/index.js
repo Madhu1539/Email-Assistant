@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Mail, Sparkles, Shield, Zap, ArrowRight, CheckCircle } from 'lucide-react';
 import useAuthStore from '@/store/authStore';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const FEATURES = [
   {
@@ -60,6 +61,7 @@ export default function LandingPage() {
             <span className="font-semibold text-[#f0f0f8]">Email Assistant</span>
           </div>
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <Link
               href="/login"
               className="text-sm text-[#9898b0] hover:text-[#f0f0f8] transition-colors px-3 py-1.5"
